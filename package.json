@@ -1,0 +1,23 @@
+{
+  "name": "demo-rest-server",
+  "version": "1.0.0",
+  "description": "A demo REST server with very basic functionalities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacopofar/demo-REST-server.git"
+  },
+  "author": "Jacopo Farina",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jacopofar/demo-REST-server/issues"
+  },
+  "homepage": "https://github.com/jacopofar/demo-REST-server#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "nconf": "^0.8.4"
+  }
+}

@@ -1,4 +1,5 @@
 {
   "port": 7000,
-  "data_folder": "data"
+  "data_folder": "data",
+  "json_max_size": "5mb"
 }

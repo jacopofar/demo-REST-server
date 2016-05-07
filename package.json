@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/jacopofar/demo-REST-server#readme",
   "dependencies": {
+    "body-parser": "^1.15.1",
     "express": "^4.13.4",
+    "mkdirp": "^0.5.1",
     "nconf": "^0.8.4"
   }
 }

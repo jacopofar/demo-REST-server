@@ -51,7 +51,9 @@ module.exports.writeKV = function (fs_keys, data, cb) {
     cb({ error: 'cannot write an empty key array' });
     return;
   }
-  const folder_path = path.join(conf.get('data_folder'), (fs_keys.length === 1) ? fs_keys[0] : fs_keys.slice(0, -1).reduce((a, b) => path.join(a, b)));
+  const folder_path = (fs_keys.length === 1) ?
+    conf.get('data_folder') :
+    path.join(conf.get('data_folder'), fs_keys.slice(0, -1).reduce((a, b) => path.join(a, b)));
   //if we know in advance no folder has to be created, just avoid to check
   let dir_creator = (a, fun) => {fun();};
   if (fs_keys.length > 1) {

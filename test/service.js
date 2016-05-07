@@ -1,5 +1,5 @@
 const request = require("request");
-
+require('should');
 describe('Basic service PUT and GET functionalities', function() {
   describe('can PUT', function() {
     it('respond with json', function(done) {
@@ -13,7 +13,12 @@ describe('Basic service PUT and GET functionalities', function() {
       json: true };
 
       request(options, function (error, response, body) {
-        if (error) done(error);
+        if (error) {
+          done(error);
+          return;
+        }
+        console.log(body);
+        response.statusCode.should.equal(201);
         done();
       });
     });

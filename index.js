@@ -70,6 +70,7 @@ app.put('/:base_key*', function (req, http_res) {
 
   helpers.writeKV(fs_keys, req.body.toString(), function (err, overwritten) {
     if (err) {
+      console.log(fs_keys, err);
       http_res.status(500).json(err);
       return;
     }

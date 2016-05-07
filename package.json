@@ -21,5 +21,9 @@
     "express": "^4.13.4",
     "mkdirp": "^0.5.1",
     "nconf": "^0.8.4"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5",
+    "request": "^2.72.0"
   }
 }

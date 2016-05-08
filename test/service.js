@@ -32,6 +32,7 @@ describe('Basic service PUT and GET functionalities', function () {
       done();
     });
   });
+
   describe('can PUT', function () {
     it('responds with a 201 the first time a key is written', function (done) {
       let options = { method: 'PUT',
@@ -46,11 +47,12 @@ describe('Basic service PUT and GET functionalities', function () {
           done(error);
           return;
         }
-        response.statusCode.should.equal(201);
+        should.equal(response.statusCode, 201, 'status code is 201');
         done();
       });
     });
-
+  });
+  describe('can GET back', function () {
     it('responds with the object just PUT', function (done) {
       let options = { method: 'PUT',
       url: 'http://localhost:7000/testpath/retrieve',

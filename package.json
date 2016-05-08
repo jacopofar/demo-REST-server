@@ -20,7 +20,9 @@
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
     "mkdirp": "^0.5.1",
-    "nconf": "^0.8.4"
+    "morgan": "^1.7.0",
+    "nconf": "^0.8.4",
+    "winston": "^2.2.0"
   },
   "devDependencies": {
     "mocha": "^2.4.5",

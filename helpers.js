@@ -4,7 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
 /*
-* Pure function to map an arbitrary string to a unique and filesystem-friendly key
+* Pure synchronous function to map an arbitrary string to a unique and filesystem-friendly key
+* @param {String} key - the key to hash
 */
 
 module.exports.mapToNiceKey = function (key) {

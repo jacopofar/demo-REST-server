@@ -6,12 +6,16 @@ const nconf = require('nconf');
 const helpers = require('./helpers.js');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-//needed for testing
-module.exports.server = server;
+const morgan = require('morgan');
+const winston = require('winston');
+
+global.log = winston;
+app.use(morgan(':date[iso] :method :url :status  - :res[content-length] :response-time ms'));
 
 global.conf = nconf.argv()
 .env()
 .file({ file: 'config.json' });
+
 
 app.use(bodyParser.raw({ type: () => true, limit: conf.get('json_max_size') }));
 

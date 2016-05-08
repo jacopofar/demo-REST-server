@@ -1,4 +1,5 @@
 # demo-REST-server
+[![Build Status](https://travis-ci.org/jacopofar/demo-REST-server.svg?branch=master)](https://travis-ci.org/jacopofar/demo-REST-server)
 Demo of a REST service in Node.js
 
 What it does

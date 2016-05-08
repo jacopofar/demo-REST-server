@@ -101,7 +101,7 @@ app.get('/:base_key*', function (req, http_res) {
 
 app.put('/:base_key*', function (req, http_res) {
   if (req.get('Content-Type') !== 'application/json') {
-    http_res.status(400).send('content type must be application/json');
+    http_res.status(415).send('content type must be application/json');
     return;
   }
   try {
@@ -126,4 +126,8 @@ app.put('/:base_key*', function (req, http_res) {
       http_res.status(201).send('value created');
     }
   });
+});
+
+app.get('/', function (req, http_res) {
+  http_res.send('nothing here, see https://github.com/jacopofar/demo-REST-server');
 });

@@ -56,6 +56,46 @@ describe('Basic service PUT and GET functionalities', function () {
       });
     });
   });
+
+
+  describe('cannot PUT somehting that is not JSON', function () {
+    it('responds with a 400 when writing an invalid JSON string', function (done) {
+      let options = { method: 'PUT',
+      url: 'http://localhost:7000/testpath/',
+      headers:
+      { 'content-type': 'application/json' },
+      body: '{{"answer":42}'
+      };
+
+      request(options, function (error, response) {
+        if (error) {
+          done(error);
+          return;
+        }
+        should.equal(response.statusCode, 400, 'status code is 400');
+        done();
+      });
+    });
+
+    it('responds with a 415 when writing a non-JSON mimetype', function (done) {
+      let options = { method: 'PUT',
+      url: 'http://localhost:7000/testpath/',
+      headers:
+      { 'content-type': 'application/xml' },
+      body: '{"answer":42}'
+      };
+
+      request(options, function (error, response) {
+        if (error) {
+          done(error);
+          return;
+        }
+        should.equal(response.statusCode, 415, 'status code is 415');
+        done();
+      });
+    });
+  });
+
   describe('can GET back', function () {
     it('responds with the object just PUT', function (done) {
       let options = { method: 'PUT',

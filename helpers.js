@@ -40,6 +40,7 @@ const getBestKeyValue = function (keys, cb) {
     }
   });
 };
+module.exports.getBestKeyValue = getBestKeyValue;
 
 /**
 * Write the given data on the given key array, creating the folders when necessary
@@ -83,4 +84,3 @@ module.exports.writeKV = function (fs_keys, data, cb) {
     });
   });
 };
-module.exports.getBestKeyValue = getBestKeyValue;

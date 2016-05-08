@@ -21,15 +21,15 @@ app.use(bodyParser.raw({ type: () => true, limit: conf.get('json_max_size') }));
 
 
 const port = conf.get('port');
-console.log(`starting server on port ${port}...`);
+log.info(`starting server on port ${port}...`);
 
 fs.mkdir(conf.get('data_folder'), (err) =>{
   if(err) {
-    console.log(err);
-    return;
+    log.fatal(err);
+    process.exit(2);
   }
   server.listen(port, function () {
-    console.log('server started and listening!');
+  log.info('server started and listening!');
   });
 });
 
@@ -40,17 +40,17 @@ app.get('/:base_key*', function (req, http_res) {
   const fs_keys = raw_keys.map(helpers.mapToNiceKey);
   helpers.getBestKeyValue(fs_keys, function (err, foundkey, data) {
     if (err) {
-      console.log('error', err);
+      log.error('error' + JSON.stringify(err));
       http_res.status(500).json(err);
       return;
     }
-    if(foundkey.length === 0){
+    if (foundkey.length === 0){
       http_res.status(404).send('key completely unknown');
       return;
     }
     if (foundkey.length !== raw_keys.length) {
       //it was found but it wasn't an exact match, send a redirect
-      console.log('redirecting a key: ' + raw_keys.join('/') +  ' => ' + raw_keys.slice(0, foundkey.length).join('/'));
+      log.debug('redirecting a key: ' + raw_keys.join('/') +  ' => ' + raw_keys.slice(0, foundkey.length).join('/'));
       http_res.redirect('/' + raw_keys.slice(0, foundkey.length).join('/'));
       return;
     }
@@ -85,7 +85,6 @@ app.put('/:base_key*', function (req, http_res) {
 
   helpers.writeKV(fs_keys, req.body.toString(), function (err, overwritten) {
     if (err) {
-      console.log(fs_keys, err);
       http_res.status(500).json(err);
       return;
     }
@@ -95,6 +94,5 @@ app.put('/:base_key*', function (req, http_res) {
     else{
       http_res.status(201).send('value created');
     }
-
   });
 });

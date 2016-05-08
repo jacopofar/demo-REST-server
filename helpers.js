@@ -28,8 +28,8 @@ const getBestKeyValue = function (keys, cb) {
   const complete_path = path.join(conf.get('data_folder'), keys.reduce((a, b) => path.join(a, b))) + '.json';
   fs.readFile(complete_path, 'utf8', (err, data) => {
     if (err) {
-      if(err.code !== 'ENOENT') {
-        console.log('error accessing the filesystem: ' + JSON.stringify(err));
+      if (err.code !== 'ENOENT') {
+        log.error('error accessing the filesystem: ' + JSON.stringify(err));
         cb(err);
         return;
       }

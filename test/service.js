@@ -64,7 +64,7 @@ describe('Basic service PUT and GET functionalities', function () {
           done(error);
           return;
         }
-        should.equal(response.statusCode, 201, 'the fist PUT status code is 201');
+        should.equal(response.statusCode, 201, 'the first PUT status code is 201');
         options.method = 'GET';
         options.body = {};
         request(options, function (error, response, body) {
@@ -90,7 +90,7 @@ describe('Basic service PUT and GET functionalities', function () {
           done(error);
           return;
         }
-        should.equal(response.statusCode, 201);
+        should.equal(response.statusCode, 201, 'the first PUT status code is 201');
         let options2 = { method: 'PUT',
         url: 'http://localhost:7000/testpath/overwrite',
         headers:
@@ -103,7 +103,7 @@ describe('Basic service PUT and GET functionalities', function () {
             done(error);
             return;
           }
-          response.statusCode.should.equal(200);
+          should.equal(response.statusCode, 200, 'the second PUT status code is 200');
           done();
         });
       });

@@ -5,7 +5,9 @@ const server = require('http').createServer(app);
 const nconf = require('nconf');
 const helpers = require('./helpers.js');
 const bodyParser = require('body-parser');
-
+const fs = require('fs');
+//needed for testing
+module.exports.server = server;
 
 global.conf = nconf.argv()
 .env()
@@ -17,9 +19,16 @@ app.use(bodyParser.raw({ type: () => true, limit: conf.get('json_max_size') }));
 const port = conf.get('port');
 console.log(`starting server on port ${port}...`);
 
-server.listen(port, function () {
-  console.log('server started and listening!');
+fs.mkdir(conf.get('data_folder'), (err) =>{
+  if(err) {
+    console.log(err);
+    return;
+  }
+  server.listen(port, function () {
+    console.log('server started and listening!');
+  });
 });
+
 
 app.get('/:base_key*', function (req, http_res) {
   const raw_keys = [req.params['base_key']].concat(req.params[0].split('/').slice(1));

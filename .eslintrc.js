@@ -8,7 +8,11 @@ module.exports = {
   'globals':{
     'config':true,
     'log':true,
-    'conf':true
+    'conf':true,
+    //tests
+    'describe': true,
+    'it': true,
+    'before': true
   },
   'extends': 'eslint:recommended',
   'rules': {

@@ -4,7 +4,8 @@
   "description": "A demo REST server with very basic functionalities",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test"
+    "test": "./node_modules/.bin/mocha test",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

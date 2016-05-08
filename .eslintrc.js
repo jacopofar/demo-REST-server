@@ -12,7 +12,8 @@ module.exports = {
     //tests
     'describe': true,
     'it': true,
-    'before': true
+    'before': true,
+    'after': true
   },
   'extends': 'eslint:recommended',
   'rules': {

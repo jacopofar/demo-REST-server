@@ -10,20 +10,48 @@ describe('Basic service PUT and GET functionalities', function (done) {
     fs.renameSync('config.json', 'config_temp.json');
     fs.renameSync('config_test.json', 'config.json');
     //destroy previous data, if present, and run the server
-      rimraf('data_test', function (err_rmdir) {
-        const app = require('../index.js');
-        done();
-      });
+    rimraf('data_test', function (err_rmdir) {
+      if (err_rmdir) {
+        console.log('error deleting the test data folder', err_rmdir);
+        process.exit();
+      }
+      require('../index.js');
+      done();
+    });
   });
 
   after(function (done) {
     //replace the test config with the original one
     fs.renameSync('config.json', 'config_test.json');
     fs.renameSync('config_temp.json', 'config.json');
-      rimraf('data_test', function (err_rmdir) {
+    rimraf('data_test', function (err_rmdir) {
+      if (err_rmdir) {
+        console.log('error deleting the test data folder', err_rmdir);
+        process.exit();
+      }
+      done();
+    });
+  });
+  describe('can PUT', function () {
+    it('responds with a 201 the first time a key is written', function (done) {
+      let options = { method: 'PUT',
+      url: 'http://localhost:7000/testpath/',
+      headers:
+      { 'content-type': 'application/json' },
+      body: { answer: 42, test: true },
+      json: true };
+
+      request(options, function (error, response) {
+        if (error) {
+          done(error);
+          return;
+        }
+        response.statusCode.should.equal(201);
         done();
       });
+    });
   });
+
   describe('can PUT', function () {
     it('respond with a 200 the second time a key is written', function (done) {
       let options = { method: 'PUT',

@@ -44,4 +44,23 @@ describe('Helpers works properly', function () {
       should.equal(helpers.mapToNiceKey('  '), helpers.mapToNiceKey('  '), 'same arguments lead to same hashes');
     });
   });
+  describe('key creations', function () {
+    it('stores the value at a given key', function () {
+      helpers.writeKV(['a', 'b'], '{ "k": "hello world" }', function () {
+        helpers.getBestKeyValue(['a', 'b'], function (err, matching_keys, data) {
+          should.deepEqual(matching_keys, ['a', 'b'], 'keys match perfectly when possible');
+          should.deepEqual(data, { k: "hello world" }, 'the value is the same');
+        });
+      });
+    });
+    it('retrieve the values at a shorter key', function () {
+      helpers.writeKV(['aa', 'bb'], '{ "k": "hello world" }', function () {
+
+        helpers.getBestKeyValue(['aa', 'bb', 'cc'], function (err, matching_keys, data) {
+          should.deepEqual(matching_keys, ['aa', 'bb'], 'keys are a prefix of the given ones');
+          should.deepEqual(data, { k: "hello world" }, 'the value is the same');
+        });
+      });
+    });
+  });
 });

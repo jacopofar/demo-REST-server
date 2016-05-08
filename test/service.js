@@ -55,7 +55,7 @@ describe('Basic service PUT and GET functionalities', function (done) {
   describe('can PUT', function () {
     it('respond with a 200 the second time a key is written', function (done) {
       let options = { method: 'PUT',
-      url: 'http://localhost:7000/testpath/',
+      url: 'http://localhost:7000/testpath/overwrite',
       headers:
       { 'content-type': 'application/json' },
       body: { answer: 42, test: true },
@@ -68,7 +68,7 @@ describe('Basic service PUT and GET functionalities', function (done) {
         }
         response.statusCode.should.equal(201);
         let options2 = { method: 'PUT',
-        url: 'http://localhost:7000/testpath/',
+        url: 'http://localhost:7000/testpath/overwrite',
         headers:
         { 'content-type': 'application/json' },
         body: { answer: 42, test: true, second: true },

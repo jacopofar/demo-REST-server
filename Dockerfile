@@ -1,5 +1,5 @@
 FROM node:6.1-slim
-ADD . /demo_REST_server
-RUN cd /demo_REST_server && /usr/bin/npm install
-CMD ["/usr/bin/node","/demo_REST_server/index.js"]
-WORKDIR /demo_REST_server
+ADD . /opt/demo_REST_server
+RUN cd /opt/demo_REST_server && npm install
+CMD ["node","/opt/demo_REST_server/index.js"]
+WORKDIR /opt/demo_REST_server

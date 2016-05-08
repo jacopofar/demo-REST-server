@@ -2,9 +2,9 @@
 const request = require('request');
 const rimraf = require('rimraf');
 const fs = require('fs');
-require('should');
+const should = require('should');
 
-describe('Basic service PUT and GET functionalities', function (done) {
+describe('Basic service PUT and GET functionalities', function () {
   before(function (done) {
     //replace the config with a test one
     fs.renameSync('config.json', 'config_temp.json');
@@ -50,9 +50,33 @@ describe('Basic service PUT and GET functionalities', function (done) {
         done();
       });
     });
+
+    it('responds with the object just PUT', function (done) {
+      let options = { method: 'PUT',
+      url: 'http://localhost:7000/testpath/retrieve',
+      headers:
+      { 'content-type': 'application/json' },
+      body: { answer: 42, see_me: 'yes' },
+      json: true };
+
+      request(options, function (error, response) {
+        if (error) {
+          done(error);
+          return;
+        }
+        response.statusCode.should.equal(201);
+        options.method = 'GET';
+        options.body = {};
+        request(options, function (error, response, body) {
+          response.statusCode.should.equal(200);
+          should.deepEqual(body, { answer: 42, see_me: 'yes' }, 'the JSON is the same which was just PUT');
+          done();
+        });
+      });
+    });
   });
 
-  describe('can PUT', function () {
+  describe('can PUT twice', function () {
     it('respond with a 200 the second time a key is written', function (done) {
       let options = { method: 'PUT',
       url: 'http://localhost:7000/testpath/overwrite',

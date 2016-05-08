@@ -50,6 +50,7 @@ app.get('/:base_key*', function (req, http_res) {
       http_res.redirect('/' + raw_keys.slice(0, foundkey.length).join('/'));
       return;
     }
+    /*
     http_res.json({
       base: req.params['base_key'],
       added: req.params[0].split('/').slice(1),
@@ -58,7 +59,8 @@ app.get('/:base_key*', function (req, http_res) {
       fs_keys: fs_keys,
       found: foundkey,
       data: data
-    });
+    });*/
+    http_res.json(data);
   });
 });
 

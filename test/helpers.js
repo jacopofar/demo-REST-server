@@ -55,10 +55,16 @@ describe('Helpers works properly', function () {
     });
     it('retrieve the values at a shorter key', function () {
       helpers.writeKV(['aa', 'bb'], '{ "k": "hello world" }', function () {
-
         helpers.getBestKeyValue(['aa', 'bb', 'cc'], function (err, matching_keys, data) {
           should.deepEqual(matching_keys, ['aa', 'bb'], 'keys are a prefix of the given ones');
           should.deepEqual(data, { k: "hello world" }, 'the value is the same');
+        });
+      });
+    });
+    it('does not give false positives for a shorter key', function () {
+      helpers.writeKV(['aax', 'bbx', 'ccx'], '{ "k": "hello world" }', function () {
+        helpers.getBestKeyValue(['aax', 'bbx'], function (err, matching_keys) {
+          should.equal(matching_keys.length, 0, 'cannot retrieve a longer key');
         });
       });
     });

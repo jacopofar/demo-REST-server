@@ -9,7 +9,7 @@ describe('Basic service PUT and GET functionalities', function (done) {
     //replace the config with a test one
     fs.renameSync('config.json', 'config_temp.json');
     fs.renameSync('config_test.json', 'config.json');
-    //run the server
+    //destroy previous data, if present, and run the server
       rimraf('data_test', function (err_rmdir) {
         const app = require('../index.js');
         done();

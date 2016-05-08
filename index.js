@@ -35,7 +35,6 @@ const startServer = function () {
   global.conf = nconf.argv()
   .env()
   .file({ file: 'config.json' });
-console.log('config folder ' + conf.get('data_folder'));
   global.log = winston;
   if (conf.get('http_logging')) {
     app.use(morgan(':date[iso] :method :url :status  - :res[content-length] :response-time ms'));

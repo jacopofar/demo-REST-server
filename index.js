@@ -11,8 +11,9 @@ const winston = require('winston');
 
 //observer to be called when ready, used for testing
 let onReady;
-//call the observer immediately if the server has already benn started
+//call the observer immediately if the server has already benn started, used for testing
 let isRunning;
+
 
 module.exports.onReady = function (cb) {
   if (isRunning) {
@@ -75,7 +76,7 @@ app.get('/:base_key*', function (req, http_res) {
       http_res.status(500).json(err);
       return;
     }
-    if (foundkey.length === 0){
+    if (foundkey.length === 0) {
       http_res.status(404).send('key completely unknown');
       return;
     }
@@ -85,18 +86,8 @@ app.get('/:base_key*', function (req, http_res) {
       http_res.redirect('/' + raw_keys.slice(0, foundkey.length).join('/'));
       return;
     }
-    /*
-    http_res.json({
-    base: req.params['base_key'],
-    added: req.params[0].split('/').slice(1),
-    pars: req.params[0],
-    keys: [req.params['base_key']].concat(req.params[0].split('/').slice(1)),
-    fs_keys: fs_keys,
-    found: foundkey,
-    data: data
-  });*/
-  http_res.json(data);
-});
+    http_res.json(data);
+  });
 });
 
 app.put('/:base_key*', function (req, http_res) {
@@ -105,7 +96,7 @@ app.put('/:base_key*', function (req, http_res) {
     return;
   }
   try {
-    JSON.parse(req.body.toString())
+    JSON.parse(req.body.toString());
   }
   catch (e) {
     http_res.status(400).send('not a valid JSON');
@@ -119,7 +110,7 @@ app.put('/:base_key*', function (req, http_res) {
       http_res.status(500).json(err);
       return;
     }
-    if(overwritten){
+    if (overwritten){
       http_res.status(200).send('value overwritten');
     }
     else{
@@ -128,6 +119,34 @@ app.put('/:base_key*', function (req, http_res) {
   });
 });
 
+app.delete('/:base_key*', function (req, http_res) {
+  const raw_keys = [req.params['base_key']].concat(req.params[0].split('/').slice(1));
+  //filesystem-friendly keys array
+  const fs_keys = raw_keys.map(helpers.mapToNiceKey);
+  helpers.getBestKeyValue(fs_keys, function (err, foundkey, data) {
+    if (err) {
+      log.error('error' + JSON.stringify(err));
+      http_res.status(500).json(err);
+      return;
+    }
+    if (foundkey.length === 0) {
+      http_res.status(404).send('key completely unknown');
+      return;
+    }
+    if (foundkey.length !== raw_keys.length) {
+      http_res.status(404).send('found a different key which is ' + raw_keys.slice(0, foundkey.length).join('/')+ ', not the exact one given');
+      return;
+    }
+    helpers.delete(fs_keys, (err) => {
+      if(err){
+        http_res.status(500).send(err);
+        return;
+      }
+      http_res.send('data removed');
+    });
+  });
+});
+
 app.get('/', function (req, http_res) {
-  http_res.send('nothing here, see https://github.com/jacopofar/demo-REST-server');
+  http_res.send('no keys here, see https://github.com/jacopofar/demo-REST-server');
 });

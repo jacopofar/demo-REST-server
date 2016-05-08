@@ -9,30 +9,62 @@ const fs = require('fs');
 const morgan = require('morgan');
 const winston = require('winston');
 
-global.log = winston;
-app.use(morgan(':date[iso] :method :url :status  - :res[content-length] :response-time ms'));
+//observer to be called when ready, used for testing
+let onReady;
+//call the observer immediately if the server has already benn started
+let isRunning;
 
-global.conf = nconf.argv()
-.env()
-.file({ file: 'config.json' });
-
-
-app.use(bodyParser.raw({ type: () => true, limit: conf.get('json_max_size') }));
-
-
-const port = conf.get('port');
-log.info(`starting server on port ${port}...`);
-
-fs.mkdir(conf.get('data_folder'), (err) =>{
-  if(err) {
-    log.fatal(err);
-    process.exit(2);
+module.exports.onReady = function (cb) {
+  if (isRunning) {
+    cb();
   }
-  server.listen(port, function () {
-  log.info('server started and listening!');
-  });
-});
+  else {
+    onReady = cb;
+  }
+};
 
+module.exports.terminate = function () {
+  log.info('closing the server');
+  server.close();
+  isRunning = false;
+};
+
+const startServer = function () {
+  if (isRunning) return;
+
+  global.conf = nconf.argv()
+  .env()
+  .file({ file: 'config.json' });
+console.log('config folder ' + conf.get('data_folder'));
+  global.log = winston;
+  if (conf.get('http_logging')) {
+    app.use(morgan(':date[iso] :method :url :status  - :res[content-length] :response-time ms'));
+  }
+
+  app.use(bodyParser.raw({ type: () => true, limit: conf.get('json_max_size') }));
+
+
+  const port = conf.get('port');
+  log.info(`starting server on port ${port}...`);
+
+  fs.mkdir(conf.get('data_folder'), (err) => {
+    log.info('creating data folder ' + conf.get('data_folder'));
+    if (err && err.code !== 'EEXIST') {
+      log.error(err);
+      process.exit(2);
+    }
+    server.listen(port, function () {
+      log.info('server started and listening!');
+      //tell the test suite, if present, that the server is ready
+      if (onReady) onReady();
+      isRunning = true;
+    });
+  });
+};
+
+module.exports.startServer = startServer;
+
+startServer();
 
 app.get('/:base_key*', function (req, http_res) {
   const raw_keys = [req.params['base_key']].concat(req.params[0].split('/').slice(1));
@@ -56,16 +88,16 @@ app.get('/:base_key*', function (req, http_res) {
     }
     /*
     http_res.json({
-      base: req.params['base_key'],
-      added: req.params[0].split('/').slice(1),
-      pars: req.params[0],
-      keys: [req.params['base_key']].concat(req.params[0].split('/').slice(1)),
-      fs_keys: fs_keys,
-      found: foundkey,
-      data: data
-    });*/
-    http_res.json(data);
-  });
+    base: req.params['base_key'],
+    added: req.params[0].split('/').slice(1),
+    pars: req.params[0],
+    keys: [req.params['base_key']].concat(req.params[0].split('/').slice(1)),
+    fs_keys: fs_keys,
+    found: foundkey,
+    data: data
+  });*/
+  http_res.json(data);
+});
 });
 
 app.put('/:base_key*', function (req, http_res) {

@@ -3,6 +3,7 @@ const request = require('request');
 const rimraf = require('rimraf');
 const fs = require('fs');
 const should = require('should');
+const testServer = require('../index.js');
 
 describe('Basic service PUT and GET functionalities', function () {
   before(function (done) {
@@ -15,8 +16,10 @@ describe('Basic service PUT and GET functionalities', function () {
         console.log('error deleting the test data folder', err_rmdir);
         process.exit();
       }
-      require('../index.js');
-      done();
+      //close then restart to reload the config
+      testServer.terminate();
+      testServer.startServer();
+      testServer.onReady(done);
     });
   });
 
@@ -29,6 +32,7 @@ describe('Basic service PUT and GET functionalities', function () {
         console.log('error deleting the test data folder', err_rmdir);
         process.exit();
       }
+      testServer.terminate();
       done();
     });
   });

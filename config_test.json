@@ -1,5 +1,7 @@
 {
   "port": 7000,
   "data_folder": "data_test",
-  "json_max_size": "5mb"
+  "json_max_size": "5mb",
+  "http_logging": false
+
 }

@@ -54,8 +54,8 @@ module.exports.writeKV = function (fs_keys, data, cb) {
     return;
   }
   const folder_path = (fs_keys.length === 1) ?
-    conf.get('data_folder') :
-    path.join(conf.get('data_folder'), fs_keys.slice(0, -1).reduce((a, b) => path.join(a, b)));
+  conf.get('data_folder') :
+  path.join(conf.get('data_folder'), fs_keys.slice(0, -1).reduce((a, b) => path.join(a, b)));
   //if we know in advance no folder has to be created, just avoid to check
   let dir_creator = (a, fun) => {fun();};
   if (fs_keys.length > 1) {
@@ -82,5 +82,26 @@ module.exports.writeKV = function (fs_keys, data, cb) {
         cb(null, err_non_existing === null);
       });
     });
+  });
+};
+
+
+/**
+* Delete the given key array
+* @param {Array} keys - the keys array to write to
+* @param {Function} cb - a callback which will receive the error code, if any
+*/
+module.exports.delete = function (fs_keys, cb) {
+  if (fs_keys.length === 0) {
+    cb({ error: 'cannot delete an empty key array' });
+    return;
+  }
+  const folder_path = (fs_keys.length === 1) ?
+  conf.get('data_folder') :
+  path.join(conf.get('data_folder'), fs_keys.slice(0, -1).reduce((a, b) => path.join(a, b)));
+
+  const file_name = path.join(folder_path, fs_keys.slice(-1) + '.json');
+  fs.unlink(file_name, function (error) {
+    cb(error);
   });
 };

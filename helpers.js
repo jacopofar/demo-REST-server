@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
+const contentCache = require('lru-cache')({ max: 10000000, length: (n, key) => key.length });
 
 const currently_writing = new Set();
 /*
@@ -28,6 +29,12 @@ const getBestKeyValue = function (keys, cb) {
     return cb(null, []);
   }
   const complete_path = path.join(conf.get('data_folder'), keys.reduce((a, b) => path.join(a, b))) + '.json';
+  const cachedVal = contentCache.get(complete_path);
+  if (typeof cachedVal !== 'undefined') {
+    cb(null, keys, JSON.parse(cachedVal));
+    return;
+  }
+
   fs.readFile(complete_path, 'utf8', (err, data) => {
     if (err) {
       if (err.code !== 'ENOENT') {
@@ -38,6 +45,7 @@ const getBestKeyValue = function (keys, cb) {
       getBestKeyValue(keys.slice(0, -1), cb);
     }
     else {
+      contentCache.set(complete_path, data);
       cb(null, keys, JSON.parse(data));
     }
   });
@@ -80,12 +88,14 @@ module.exports.writeKV = function (fs_keys, data, cb) {
         return;
       }
       currently_writing.add(file_name);
+
       fs.writeFile(file_name, data, 'utf8', (err) => {
         currently_writing.delete(file_name);
         if (err) {
           cb({ error: 'cannot write the file', detail: err });
           return;
         }
+        contentCache.set(file_name, data);
         //if stats did not report it didn't exist, it was overwritten
         cb(null, err_non_existing === null);
       });
@@ -118,5 +128,5 @@ module.exports.delete = function (fs_keys, cb) {
 * Immediately clear all the caches
 */
 module.exports.clearCaches = () => {
-
+  contentCache.reset();
 };

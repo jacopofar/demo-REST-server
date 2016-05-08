@@ -27,6 +27,7 @@ module.exports.onReady = function (cb) {
 module.exports.terminate = function () {
   log.info('closing the server');
   server.close();
+  helpers.clearCaches();
   isRunning = false;
 };
 
@@ -107,6 +108,10 @@ app.put('/:base_key*', function (req, http_res) {
 
   helpers.writeKV(fs_keys, req.body.toString(), function (err, overwritten) {
     if (err) {
+      if (err.concurrent_request) {
+        http_res.status(409).send('this key was already being written by another request, retry');
+        return;
+      }
       http_res.status(500).json(err);
       return;
     }
@@ -123,7 +128,7 @@ app.delete('/:base_key*', function (req, http_res) {
   const raw_keys = [req.params['base_key']].concat(req.params[0].split('/').slice(1));
   //filesystem-friendly keys array
   const fs_keys = raw_keys.map(helpers.mapToNiceKey);
-  helpers.getBestKeyValue(fs_keys, function (err, foundkey, data) {
+  helpers.getBestKeyValue(fs_keys, function (err, foundkey) {
     if (err) {
       log.error('error' + JSON.stringify(err));
       http_res.status(500).json(err);
@@ -134,11 +139,11 @@ app.delete('/:base_key*', function (req, http_res) {
       return;
     }
     if (foundkey.length !== raw_keys.length) {
-      http_res.status(404).send('found a different key which is ' + raw_keys.slice(0, foundkey.length).join('/')+ ', not the exact one given');
+      http_res.status(404).send('found a different key which is ' + raw_keys.slice(0, foundkey.length).join('/') + ', not the exact one given');
       return;
     }
     helpers.delete(fs_keys, (err) => {
-      if(err){
+      if (err) {
         http_res.status(500).send(err);
         return;
       }

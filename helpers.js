@@ -3,6 +3,8 @@ const crypto = require('crypto');
 const path = require('path');
 const fs = require('fs');
 const mkdirp = require('mkdirp');
+
+const currently_writing = new Set();
 /*
 * Pure synchronous function to map an arbitrary string to a unique and filesystem-friendly key
 * @param {String} key - the key to hash
@@ -73,7 +75,13 @@ module.exports.writeKV = function (fs_keys, data, cb) {
         cb({ error: 'cannot access the file', detail: err_non_existing });
         return;
       }
+      if (currently_writing.has(file_name)) {
+        cb({ error: 'the file is being written by a concurrent request', concurrent_request: true });
+        return;
+      }
+      currently_writing.add(file_name);
       fs.writeFile(file_name, data, 'utf8', (err) => {
+        currently_writing.delete(file_name);
         if (err) {
           cb({ error: 'cannot write the file', detail: err });
           return;
@@ -104,4 +112,11 @@ module.exports.delete = function (fs_keys, cb) {
   fs.unlink(file_name, function (error) {
     cb(error);
   });
+};
+
+/**
+* Immediately clear all the caches
+*/
+module.exports.clearCaches = () => {
+
 };

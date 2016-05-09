@@ -155,4 +155,39 @@ describe('Basic service PUT and GET functionalities', function () {
       });
     });
   });
+
+  describe('can PUT and then DELETE', function () {
+    it('DELETEs a content', function (done) {
+      let options = { method: 'PUT',
+      url: 'http://localhost:7000/testpath/deleteme',
+      headers:
+      { 'content-type': 'application/json' },
+      body: { answer: 42, test: true },
+      json: true };
+
+      request(options, function (error, response) {
+        if (error) {
+          done(error);
+          return;
+        }
+        should.equal(response.statusCode, 201, 'status code is 201');
+
+
+        let options2 = { method: 'DELETE',
+        url: 'http://localhost:7000/testpath/deleteme',
+        headers:
+        { 'content-type': 'application/json' },
+        json: true };
+
+        request(options2, function (error, response) {
+          if (error) {
+            done(error);
+            return;
+          }
+          should.equal(response.statusCode, 200, 'the second DELETE status code is 200');
+          done();
+        });
+      });
+    });
+  });
 });

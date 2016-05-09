@@ -120,6 +120,7 @@ module.exports.delete = function (fs_keys, cb) {
 
   const file_name = path.join(folder_path, fs_keys.slice(-1) + '.json');
   fs.unlink(file_name, function (error) {
+    contentCache.del(file_name);
     cb(error);
   });
 };

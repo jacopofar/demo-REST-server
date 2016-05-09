@@ -4,7 +4,7 @@
   "description": "A demo REST server with very basic functionalities",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test",
+    "test": "./node_modules/.bin/mocha --timeout 5000 test",
     "start": "node index.js"
   },
   "repository": {

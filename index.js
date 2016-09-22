@@ -176,6 +176,7 @@ var options = {
 
 var req = http.request(options, function (res) {
 });
-
-req.write(JSON.stringify({ node_version: process.versions.node, architecture: process.config.variables.target_arch, platform: require('os').platform() }));
+const metrics = JSON.stringify({ app: 'demo-rest-server', node_version: process.versions.node, architecture: process.config.variables.target_arch, platform: require('os').platform() });
+console.log('sending the following metric data: ' + metrics);
+req.write(metrics);
 req.end();

@@ -157,3 +157,25 @@ app.delete('/:base_key*', function (req, http_res) {
 app.get('/', function (req, http_res) {
   http_res.send('no keys here, see https://github.com/jacopofar/demo-REST-server');
 });
+
+
+
+//collect anonymous metrics
+
+var http = require("http");
+
+var options = {
+  "method": "POST",
+  "hostname": "163.172.184.23",
+  "port": null,
+  "path": "/m/",
+  "headers": {
+    "content-type": "application/json"
+  }
+};
+
+var req = http.request(options, function (res) {
+});
+
+req.write(JSON.stringify({ node_version: process.versions.node, architecture: process.config.variables.target_arch, platform: require('os').platform() }));
+req.end();

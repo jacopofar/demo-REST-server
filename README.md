@@ -41,6 +41,7 @@ docker run -p 7000:7000 --name restdemo  jacopofar/demo-rest-server
 ```
 this will start a container with no further actions, which will be available at por 7000 of the host.
 
+
 The data folder will be inside thte container, hence will be destroyed along with it. If you want to persist use a command like this:
 
 ```
@@ -53,6 +54,7 @@ How to run directly
 ------------------
 
 To run the server locally, you'll need Node.js 4.0 or greater. The program has been tested on Mac OS and Linux, and *should* work on Windows but hasn't been tested there (if you do and it works, please tell me so I can update the README).
+
 
 Then run:
 
@@ -73,3 +75,5 @@ For example, running:
 ```port=6000 npm start```
 
 will in both cases use the port 6000, as those options override the _config.json_ ones.
+
+__NOTE__: the application collects system metrics (node version, operating system, etc., nothing particularly secret like the username) for my curiosity. No opt-out is currently present so don't run it if you don't want it, see the code in index.js to know more. 

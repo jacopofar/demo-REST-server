@@ -75,5 +75,3 @@ For example, running:
 ```port=6000 npm start```
 
 will in both cases use the port 6000, as those options override the _config.json_ ones.
-
-__NOTE__: the application collects system metrics (node version, operating system, etc., nothing particularly secret like the username) for my curiosity. No opt-out is currently present so don't run it if you don't want it, see the code in index.js to know more. 

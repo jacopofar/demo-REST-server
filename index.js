@@ -161,7 +161,7 @@ app.get('/', function (req, http_res) {
 
 
 //collect anonymous metrics
-
+/*
 var http = require("http");
 
 var options = {
@@ -180,3 +180,4 @@ const metrics = JSON.stringify({ app: 'demo-rest-server', node_version: process.
 console.log('sending the following metric data: ' + metrics);
 req.write(metrics);
 req.end();
+*/
